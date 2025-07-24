@@ -2,7 +2,7 @@
 An ASP.NET app to store, retrieve and manipulate branches and their shifts.
 
 # 🧩 Architecture
-MCV (Model-Controller-View)
+MVC (Model-View-Controller)
 # 🚀 Features
 - Create branches
 - Create shifts separately
