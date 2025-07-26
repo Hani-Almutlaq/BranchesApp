@@ -58,7 +58,7 @@ namespace BranchesApp.Controllers
             var currentDayOfWeek = (int)now.DayOfWeek + 1;
             var currentTimeOfDay = now.TimeOfDay;
 
-            // Get today’s shifts for this branch
+            // Get todayâ€™s shifts for this branch
             var shiftsList = await _context.Shifts
                 .Where(s => s.BranchId == branchId && s.DayId == currentDayOfWeek)
                 .ToListAsync();
@@ -130,19 +130,27 @@ namespace BranchesApp.Controllers
         {
             var now = DateTime.Now;
             var currentTimeOfDay = now.TimeOfDay;
+            var currentDayOfWeek = (int)now.DayOfWeek + 1;
 
-            // Get the shift
+            // Get the shift info
             var shift = await GetNextOrCurrentShift(branchId);
 
+            var shiftDay = shift?.DayId ?? 0;
             TimeSpan start = shift?.StartTime ?? TimeSpan.Zero;
             TimeSpan end = shift?.EndTime ?? TimeSpan.Zero;
 
+            // If the branch has no shifts return false
             if (shift == null)
-                return false;
+               return false;
 
             // Check if the branch is open now
-            bool isOpen = currentTimeOfDay >= start && currentTimeOfDay <= end;
-            return isOpen;
+            if (shiftDay == currentDayOfWeek)
+            {
+                bool isOpen = currentTimeOfDay >= start && currentTimeOfDay <= end;
+                return isOpen;
+            }
+
+            return false;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
